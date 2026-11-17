@@ -1,0 +1,48 @@
+LAB 2 - Wykonane polecenia
+
+1. Uruchomienie LocalStack
+
+docker compose up -d
+docker compose ps
+curl.exe http://localhost:4566/_localstack/health
+npm install -g @localstack/lstk
+lstk --version
+aws --version
+lstk aws --endpoint-url http://localhost:4566 s3 ls
+
+2. Strona statyczna S3
+
+lstk aws --endpoint-url http://localhost:4566 s3api create-bucket --bucket lab2-raport-koszykow
+lstk aws --endpoint-url http://localhost:4566 s3 ls
+lstk aws --endpoint-url http://localhost:4566 s3api put-bucket-policy --bucket lab2-raport-koszykow --policy file://bucket-policy.json
+lstk aws --endpoint-url http://localhost:4566 s3api get-bucket-policy --bucket lab2-raport-koszykow
+lstk aws --endpoint-url http://localhost:4566 s3 cp www\index.html s3://lab2-raport-koszykow/index.html --content-type text/html
+lstk aws --endpoint-url http://localhost:4566 s3 cp www\style.css s3://lab2-raport-koszykow/style.css --content-type text/css
+lstk aws --endpoint-url http://localhost:4566 s3 ls s3://lab2-raport-koszykow/
+lstk aws --endpoint-url http://localhost:4566 s3 website s3://lab2-raport-koszykow/ --index-document index.html
+lstk aws --endpoint-url http://localhost:4566 s3api get-bucket-website --bucket lab2-raport-koszykow
+
+Aktualizacja index.html:
+lstk aws --endpoint-url http://localhost:4566 s3 cp www\index.html s3://lab2-raport-koszykow/index.html --content-type text/html
+
+3. Lambda i szablon S3
+
+lstk aws --endpoint-url http://localhost:4566 s3api create-bucket --bucket lab2-szablon-koszykow
+lstk aws --endpoint-url http://localhost:4566 s3 cp lambda\template.html s3://lab2-szablon-koszykow/template.html --content-type text/html
+lstk aws --endpoint-url http://localhost:4566 s3 ls s3://lab2-szablon-koszykow/
+powershell -NoProfile -Command "Compress-Archive -Path 'lambda\handler.py' -DestinationPath 'lambda-function.zip' -Force"
+lstk aws --endpoint-url http://localhost:4566 lambda create-function --function-name lab2-raport-lambda --runtime python3.12 --handler handler.handler --role arn:aws:iam::000000000000:role/lambda-role --zip-file fileb://lambda-function.zip --timeout 15
+lstk aws --endpoint-url http://localhost:4566 lambda wait function-active --function-name lab2-raport-lambda
+lstk aws --endpoint-url http://localhost:4566 lambda create-function-url-config --function-name lab2-raport-lambda --auth-type NONE
+
+4. Testy HTTP
+
+curl.exe -i "http://4dep23348w4wwjjy5vhqkud6i19u0fk3.lambda-url.us-east-1.localhost.localstack.cloud:4566/?imie=Ola"
+curl.exe -i "http://4dep23348w4wwjjy5vhqkud6i19u0fk3.lambda-url.us-east-1.localhost.localstack.cloud:4566/"
+curl.exe -sS -i "http://4dep23348w4wwjjy5vhqkud6i19u0fk3.lambda-url.us-east-1.localhost.localstack.cloud:4566/?imie=Ola" | findstr /C:"HTTP/1.1" /C:"Content-Type:" /C:"<h1>"
+curl.exe -sS -i "http://4dep23348w4wwjjy5vhqkud6i19u0fk3.lambda-url.us-east-1.localhost.localstack.cloud:4566/" | findstr /C:"HTTP/1.1" /C:"Content-Type:" /C:"Brak parametru"
+
+5. Aktualizacja szablonu
+
+lstk aws --endpoint-url http://localhost:4566 s3 cp lambda\template.html s3://lab2-szablon-koszykow/template.html --content-type text/html
+lstk aws --endpoint-url http://localhost:4566 s3 cp s3://lab2-szablon-koszykow/template.html - | findstr /C:"{{IMIE}}"

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raport koszyków – Lambda</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #172554, #4338ca);
+            color: #1e293b;
+        }
+
+        .container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .label {
+            color: #4f46e5;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #312e81;
+            font-size: 36px;
+        }
+
+        .info {
+            background: #eef2ff;
+            border-left: 5px solid #6366f1;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .version {
+            margin-top: 25px;
+            color: #059669;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <div class="card">
+            <span class="label">
+                Laboratorium 2 – AWS Lambda
+            </span>
+
+            <h1>Raport dla {{IMIE}}</h1>
+
+            <p>
+                Przykładowy raport koszyków zakupowych,
+                generowany dynamicznie przez AWS Lambda.
+            </p>
+
+            <div class="info">
+                <h2>Informacje o raporcie</h2>
+                <p>
+                    Zawartość strony została pobrana
+                    z szablonu przechowywanego w Amazon S3.
+                </p>
+            </div>
+
+            <p>
+                Nowe zdanie: Szablon został zaktualizowany
+                bez ponownego wdrażania funkcji Lambda.
+            </p>
+
+            <p class="version">
+                Wersja 2: Zaktualizowany szablon HTML z Amazon S3.
+            </p>
+        </div>
+    </main>
+</body>
+
+</html>
